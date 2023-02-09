@@ -8,7 +8,7 @@ date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
 ---
 ***
 
-```{r setup, include=FALSE}
+```{r}
 all_times <- list()  # store the time for each chunk
 knitr::knit_hooks$set(time_it = local({
   now <- NULL

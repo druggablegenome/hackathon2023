@@ -1,10 +1,21 @@
-#!/usr/bin/env Rscript
-###
+---
+title: "Seurat - Test with Tabula Sapiens dataset"
+output:
+  html_document:
+    theme: united
+    df_print: kable
+date: 'Compiled: `r format(Sys.Date(), "%B %d, %Y")`'
+---
+
+```{r init}
 library(dplyr, quietly=T, warn.conflicts=F)
 library(Seurat)
 library(patchwork)
+```
 
-# SeuratObject
+# Load data into SeuratObject
+
+```{r}
 fdata <- readRDS(paste0(Sys.getenv("HOME"), "/../data/CZBiohub/TabulaSapiens/data/collection_Alzheimer_Leng_2021/", "local_01.rds"))
 message(sprintf("Seurat version (package): %s; (object): %s", packageVersion('Seurat'), fdata@version))
 message(sprintf("Project name: \"%s\"; title: \"%s\"", fdata@project.name, fdata@misc$title))
@@ -13,9 +24,18 @@ metaFields <- c("disease", "organism", "tissue", "cell_type", "clusterCellType")
 for (metaField in metaFields) {
   message(sprintf("Metadata:%s[s] (%d): %s", metaField, length(unique(fdata@meta.data[[metaField]])), paste(ordered(unique(fdata@meta.data[[metaField]])), collapse=',')))
 }
-
-
 message(sprintf("Assays: %d", length(fdata@assays)))
+```
+
+# Describe contents of SeuratObject
+
+  * Assays
+  * Reductions
+
+CCA = Canonical Correlation Analysis (related to PCA)
+tSNE = t-distributed stochastic neighbor embedding
+
+```{r}
 x <- new.env() #Avoid copying large matrix by using reference.
 for (i in 1:length(fdata@assays)) {
   x$adata <- fdata@assays[[i]]@data
@@ -34,6 +54,10 @@ for (i in 1:length(fdata@reductions)) {
   x$red <- fdata@reductions[[i]]
   
 }
+```
 
+Fix...
 
-fdata@assays[[1]][["pct_feat_set"]] <- PercentageFeatureSet(fdata@assays[[1]], pattern = "*")
+```{r}
+#fdata@assays[[1]][["pct_feat_set"]] <- PercentageFeatureSet(fdata@assays[[1]], pattern = "*")
+```
